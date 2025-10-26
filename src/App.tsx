@@ -1,17 +1,149 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { observer } from 'mobx-react-lite';
-import { AppBar } from '@mui/material';
+import { AppBar, Typography, Tabs, Tab, Box, ThemeProvider } from '@mui/material';
+import { DataContext, SolarDataType } from './interface/data';
+import { linkToData, theme } from './constants';
+import { parse } from 'papaparse';
+import OverallLineChart from './component/overallLineChart';
+import Store from './interface/appStore';
+import DateSelector from './component/dateSelector';
+import DayDataLineChart from './component/dayDataLineChart';
+import SimulationComponent from './component/simulationComponent';
 
 function App() {
-  return (
-    <div className="App">
-      <AppBar position="static" style={{ maxHeight: '40px', minHeight: '40px', justifyContent: 'center' }}>
-      </AppBar>
 
-    </div >
+  const store = useContext(Store);
+
+
+  const [loadedData, setLoadedData] = useState<SolarDataType>({
+    timeStamps: [],
+    solarIrradiance: [],
+    panelInletTemp: [],
+    panelOutletTemp: [],
+    pumpFlowRate: [],
+    tankTemp: [],
+    ambientTemp: [],
+    dateOnlyTimeStamps: []
+  });
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabIndex(newValue);
+  };
+
+  useEffect(() => {
+    fetch(linkToData)
+      .then(response => response.text())
+      .then(csvText => {
+        const results = parse(csvText, { header: true });
+        const data = results.data;
+        const timeStamps: Date[] = [];
+        const dateOnlyTimeStamps: Date[] = [];
+        const solarIrradiance: number[] = [];
+        const panelInletTemp: number[] = [];
+        const panelOutletTemp: number[] = [];
+        const pumpFlowRate: number[] = [];
+        const tankTemp: number[] = [];
+        const ambientTemp: number[] = [];
+        let maxDate: Date | undefined;
+        let minDate: Date | undefined;;
+
+        data.forEach((row: any) => {
+          const timeStamp = new Date(`${row.Date} ${row['Time (hr)']}:00 GMT-0600`);
+          const dateOnly = new Date(`${row.Date} GMT-0600`);
+          const solarIrradianceValue = parseFloat(row['Solar Irradiance']);
+          const panelInletTempValue = parseFloat(row['Panel Inlet Temp (°C)']);
+          const panelOutletTempValue = parseFloat(row['Panel Outlet Temp (°C)']);
+          const pumpFlowRateValue = parseFloat(row['Pump Flow Rate (L/min)']);
+          const tankTempValue = parseFloat(row['Tank Temp (°C)']);
+          const ambientTempValue = parseFloat(row['Ambient Temp (°C)']);
+
+          if (timeStamp && !isNaN(solarIrradianceValue) && !isNaN(panelInletTempValue) && !isNaN(panelOutletTempValue) && !isNaN(pumpFlowRateValue) && !isNaN(tankTempValue) && !isNaN(ambientTempValue)) {
+
+            solarIrradiance.push(solarIrradianceValue);
+            panelInletTemp.push(panelInletTempValue);
+            panelOutletTemp.push(panelOutletTempValue);
+            pumpFlowRate.push(pumpFlowRateValue);
+            tankTemp.push(tankTempValue);
+            ambientTemp.push(ambientTempValue);
+            timeStamps.push(timeStamp);
+            dateOnlyTimeStamps.push(dateOnly);
+
+            if (maxDate) {
+              maxDate = dateOnly.getTime() > maxDate.getTime() ? dateOnly : maxDate;
+            } else {
+              maxDate = dateOnly;
+            }
+            if (minDate) {
+              minDate = dateOnly.getTime() < minDate.getTime() ? dateOnly : minDate;
+            } else {
+              minDate = dateOnly;
+            }
+          }
+        });
+        setLoadedData({
+          timeStamps,
+          dateOnlyTimeStamps,
+          solarIrradiance,
+          panelInletTemp,
+          panelOutletTemp,
+          pumpFlowRate,
+          tankTemp,
+          ambientTemp
+        });
+
+        store.updateDates(minDate, maxDate);
+      }
+      );
+  }, []);
+
+  return (
+    <DataContext.Provider value={loadedData}>
+      <div className="App">
+        <AppBar position="static" style={{ maxHeight: '40px', minHeight: '40px', justifyContent: 'center' }}>
+          <Typography variant="h6" component="div" align="left" marginLeft={5} >
+            Solar Heat Exchange
+          </Typography>
+        </AppBar>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: 2 }}>
+          <Tabs value={tabIndex} onChange={handleTabChange} centered>
+            <Tab label="Simulate" />
+            <Tab label="Daily Average" />
+            <Tab label="Day Specific" />
+
+          </Tabs>
+          {tabIndex === 0 && (
+            <Box sx={{ padding: 3 }}>
+
+              <SimulationComponent />
+            </Box>
+          )}
+          {tabIndex === 1 && (
+            <Box sx={{ padding: 3 }}>
+              <div className="chart-grid">
+                <OverallLineChart arrayOfDataVisualized={loadedData.solarIrradiance || []} dateOnlyTimeStamps={loadedData.dateOnlyTimeStamps || []} yAxisTitle='Solar Irradiance' />
+                <OverallLineChart yAxisTitle='Panel Inlet Temp' arrayOfDataVisualized={loadedData.panelInletTemp || []} dateOnlyTimeStamps={loadedData.dateOnlyTimeStamps || []} yScaleWithMinMax={true} />
+                <OverallLineChart yAxisTitle='Panel Outlet Temp' arrayOfDataVisualized={loadedData.panelOutletTemp || []} dateOnlyTimeStamps={loadedData.dateOnlyTimeStamps || []} yScaleWithMinMax={true} />
+                <OverallLineChart yAxisTitle='Pump Flow Rate' arrayOfDataVisualized={loadedData.pumpFlowRate || []} dateOnlyTimeStamps={loadedData.dateOnlyTimeStamps || []} yScaleWithMinMax={true} />
+              </div>
+            </Box>
+          )}
+          {tabIndex === 2 && (
+            <Box sx={{ padding: 3 }}>
+              <DateSelector />
+              <div className="chart-grid">
+                <DayDataLineChart allDataOfType={loadedData.solarIrradiance} timeStamps={loadedData.timeStamps} yAxisTitle='Solar Irradiance' />
+                <DayDataLineChart allDataOfType={loadedData.panelInletTemp} timeStamps={loadedData.timeStamps} yAxisTitle='Panel Inlet Temp' yScaleWithMinMax={true} />
+                <DayDataLineChart allDataOfType={loadedData.panelOutletTemp} timeStamps={loadedData.timeStamps} yAxisTitle='Panel Outlet Temp' yScaleWithMinMax={true} />
+                <DayDataLineChart allDataOfType={loadedData.pumpFlowRate} timeStamps={loadedData.timeStamps} yAxisTitle='Pump Flow Rate' yScaleWithMinMax={true} />
+              </div>
+            </Box>
+          )}
+        </Box>
+      </div >
+    </DataContext.Provider >
   );
 }
 
-export default observer(App);
+export default observer(App);;

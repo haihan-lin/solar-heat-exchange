@@ -1,4 +1,4 @@
-Date,Time (hr),Solar Irradiance (W/m²),Panel Inlet Temp (°C),Panel Outlet Temp (°C),Pump Flow Rate (L/min),Tank Temp (°C),Ambient Temp (°C)
+Date,Time (hr),Solar Irradiance,Panel Inlet Temp (°C),Panel Outlet Temp (°C),Pump Flow Rate (L/min),Tank Temp (°C),Ambient Temp (°C)
 2025-10-01,08:00,249.9,20.8,31.4,3.61,23.3,18.1
 2025-10-01,09:00,479.5,20.2,25.8,3.83,26.2,19.1
 2025-10-01,10:00,670.3,21.1,32.8,4.09,27.1,19.4
@@ -328,4 +328,4 @@ Date,Time (hr),Solar Irradiance (W/m²),Panel Inlet Temp (°C),Panel Outlet Temp
 2025-10-30,15:00,687.9,23.9,36.0,3.94,36.0,20.1
 2025-10-30,16:00,492.1,23.5,32.5,3.87,38.9,19.6
 2025-10-30,17:00,256.4,24.7,32.9,4.17,40.1,18.2
-2025-10-30,18:00,0.0,23.6,35.0,4.04,41.6,18.1
+2025-10-30,18:00,0.1,23.6,35.0,4.04,41.6,18.1

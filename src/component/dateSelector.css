@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: start;
+  align-items: baseline;
+}
