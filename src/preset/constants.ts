@@ -1,8 +1,4 @@
-
-
-
-export const linkToData = 'generated_solar_data.csv';
-
+export const linkToData = 'https://haihan-lin.github.io/solar-heat-exchange/generated_solar_data.csv';
 
 
 export const SVGWidth = 600;
