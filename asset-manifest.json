@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/solar-heat-exchange/static/css/main.0ebf41d5.css",
-    "main.js": "/solar-heat-exchange/static/js/main.0b8d213d.js",
+    "main.js": "/solar-heat-exchange/static/js/main.9a8cb277.js",
     "static/js/453.117b0875.chunk.js": "/solar-heat-exchange/static/js/453.117b0875.chunk.js",
     "index.html": "/solar-heat-exchange/index.html",
     "main.0ebf41d5.css.map": "/solar-heat-exchange/static/css/main.0ebf41d5.css.map",
-    "main.0b8d213d.js.map": "/solar-heat-exchange/static/js/main.0b8d213d.js.map",
+    "main.9a8cb277.js.map": "/solar-heat-exchange/static/js/main.9a8cb277.js.map",
     "453.117b0875.chunk.js.map": "/solar-heat-exchange/static/js/453.117b0875.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0ebf41d5.css",
-    "static/js/main.0b8d213d.js"
+    "static/js/main.9a8cb277.js"
   ]
 }
