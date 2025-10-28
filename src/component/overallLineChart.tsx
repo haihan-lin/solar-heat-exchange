@@ -28,6 +28,7 @@ const OverallLineChart: FC<Props> = ({ arrayOfDataVisualized, dateOnlyTimeStamps
   const [dayToValuesMap, setDayToValuesMap] = useState<{ [key: string]: number[]; }>({});
 
 
+
   useEffect(() => {
     // process data into daily average
     const dailyValues: { [key: string]: number[]; } = {};

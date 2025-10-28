@@ -52,8 +52,9 @@ function App() {
         let minDate: Date | undefined;;
 
         data.forEach((row: any) => {
-          const timeStamp = new Date(`${row.Date} ${row['Time (hr)']}:00 GMT-0600`);
-          const dateOnly = new Date(`${row.Date} GMT-0600`);
+          console.log(row);
+          const timeStamp = new Date(`${row.Date}T${row['Time (hr)']}:00-06:00`);
+          const dateOnly = new Date(`${row.Date}T00:00:00-06:00`);
           const solarIrradianceValue = parseFloat(row['Solar Irradiance']);
           const panelInletTempValue = parseFloat(row['Panel Inlet Temp (°C)']);
           const panelOutletTempValue = parseFloat(row['Panel Outlet Temp (°C)']);
