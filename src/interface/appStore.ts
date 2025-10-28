@@ -4,18 +4,27 @@ import { createContext } from "react";
 export class AppStore {
   minDate: Date;
   maxDate: Date;
+  currentHoveredDateString: string | undefined;
   currentSelectedDate: Date | undefined;
+  currentHoveredTimeStamp: Date | undefined;
   constructor() {
     this.minDate = new Date();
     this.maxDate = new Date();
     makeAutoObservable(this);
-    this.currentSelectedDate = undefined;
+  }
 
+  updateCurrentHoveredTimeStamp(newTimeStamp: Date | undefined) {
+    this.currentHoveredTimeStamp = newTimeStamp;
+  }
+
+  updateCurrentHoveredDate(newDate: string | undefined) {
+    this.currentHoveredDateString = newDate;
   }
 
   updateSelectedDate(newDate: Date | undefined) {
-    // console.log('updating selected date to:', newDate?.toISOString().slice(0, 10));
+
     this.currentSelectedDate = newDate;
+    this.currentHoveredTimeStamp = undefined;
   }
 
   updateDates(newMinDate: Date | undefined, newMaxDate: Date | undefined) {
@@ -25,7 +34,6 @@ export class AppStore {
       this.maxDate = newMaxDate;
     }
     this.currentSelectedDate = this.minDate;
-
   }
 
 

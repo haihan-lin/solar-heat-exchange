@@ -1,0 +1,17 @@
+.simulation-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.slider-container {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.slider {
+  margin-top: 30px;
+}
