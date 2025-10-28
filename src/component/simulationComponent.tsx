@@ -102,8 +102,7 @@ const SimulationComponent: FC = () => {
           />
         </div>
         <Typography variant="caption">
-          Assumptions: 200L Tank size is 200L after an 8-hour sunny day .
-
+          Assumptions: 200L Tank size after an 8-hour sunny day.
         </Typography>
       </div >
       <SimulationSVG waterTemperature={finalTemp} />
